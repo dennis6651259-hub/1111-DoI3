@@ -3,6 +3,8 @@
 
 https://dennis6651259-hub.github.io/1111-DoI3/
 
+[播放網頁簡報](https://dennis6651259-hub.github.io/1111-DoI3/slides/)
+
 DietSense 是 DIC3 的 OpenSpec 提案重構專案。它針對臺式外食難以記錄份量、加料與剩食的問題，設計一個能用繁體中文理解餐點、查找營養資料並產生可修正紀錄的 AI Agent。
 
 

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="DietSense DIC3 提案簡報，共 11 頁。">
+  <title>DietSense 網頁簡報</title>
+  <link rel="stylesheet" href="slides.css">
+  <script src="slides.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <a href="../" class="brand">DietSense</a>
+    <a href="../">完整提案報告 ↗</a>
+  </header>
+  <main class="deck" aria-label="DietSense 提案簡報">
+    <section id="slide-1" class="slide cover" aria-labelledby="title-1">
+      <p class="kicker">DIETSENSE · DIC3</p>
+      <h1 id="title-1">DietSense</h1>
+      <p class="subtitle">臺式飲食熱量分析 Agent</p>
+<p class="intro">使用 OpenSpec 重構研究提案與驗收規格</p>
+    </section>
+    <section id="slide-2" class="slide " aria-labelledby="title-2">
+      <p class="kicker">DIETSENSE · DIC3</p>
+      <h1 id="title-2">臺式外食紀錄的問題</h1>
+      <div class="split">
+<div><p class="stat">50.8%</p><p>臺灣成人過重及肥胖合計<br>國健署 2018–2022 年調查</p></div>
+<div><blockquote>「一碗牛肉麵加蛋，湯喝一半。」</blockquote><p>同一菜名底下有麵、肉、蛋和湯。餐點紀錄需保留食用量及配料，才能將數值追到對應食材。</p></div>
+</div><p class="callout">研究問題｜臺式資料與限輪澄清能否減少估算誤差及記錄負擔？</p>
+    </section>
+    <section id="slide-3" class="slide " aria-labelledby="title-3">
+      <p class="kicker">DIETSENSE · DIC3</p>
+      <h1 id="title-3">研究方法與缺口</h1>
+      <dl class="rows"><div><dt>影像與多模態</dt><dd>Nutrition5k 提供分件稱重。DietAI24 與 NutriMLLM 探索影像營養估計，隱藏用油與剩食仍須額外資訊。</dd></div><div><dt>工具型 Agent</dt><dd>ReAct 提供規劃與外部查詢的參考。營養數字由食藥署、在地食譜和 USDA 資料支持。</dd></div><div><dt>本提案的檢驗</dt><dd>在臺式文字描述下，分別測試在地資料與澄清對誤差、涵蓋率及記錄時間的影響。</dd></div></dl>
+    </section>
+    <section id="slide-4" class="slide " aria-labelledby="title-4">
+      <p class="kicker">DIETSENSE · DIC3</p>
+      <h1 id="title-4">五個核心思維</h1>
+      <dl class="rows"><div><dt>01 能量平衡</dt><dd>區分已記錄攝取與 TDEE，依多日趨勢解讀。</dd></div><div><dt>02 營養組成</dt><dd>並列熱量、巨量營養素與六類食物。</dd></div><div><dt>03 份量與不確定性</dt><dd>處理可食部與剩食，保留估算範圍。</dd></div><div><dt>04 個體差異</dt><dd>以成人 REE 與活動假設估 TDEE，列出適用條件。</dd></div><div><dt>05 行為情境</dt><dd>支援加料、更正與略過追問。</dd></div></dl>
+    </section>
+    <section id="slide-5" class="slide " aria-labelledby="title-5">
+      <p class="kicker">DIETSENSE · DIC3</p>
+      <h1 id="title-5">三項取捨與設計決策</h1>
+      <dl class="rows"><div><dt>熱量總量／食物品質</dt><dd>回覆同時呈現熱量與六類食物資訊。</dd></div><div><dt>操作效率／量測精度</dt><dd>以稱重作為參考值。日常紀錄最多追問兩輪，再依證據顯示區間或未估。</dd></div><div><dt>通用／個人化</dt><dd>一般資訊以國健署指引為底。合適成人才啟用 TDEE，限制性請求啟用安全降級。</dd></div></dl>
+    </section>
+    <section id="slide-6" class="slide " aria-labelledby="title-6">
+      <p class="kicker">DIETSENSE · DIC3</p>
+      <h1 id="title-6">八模組系統架構</h1>
+      <ol class="modules"><li>使用者情境</li><li>輸入處理</li><li>Planner</li><li>版本化檢索</li><li>估算引擎</li><li>營養知識</li><li>決策與安全</li><li>輸出互動</li></ol><p class="callout">LLM 抽取食材與份量。白名單工具負責取值、運算與儲存。</p>
+    </section>
+    <section id="slide-7" class="slide " aria-labelledby="title-7">
+      <p class="kicker">DIETSENSE · DIC3</p>
+      <h1 id="title-7">餐點估算與確認流程</h1>
+      <dl class="rows"><div><dt>描述餐點 → 抽取並檢索</dt><dd>解析食材、份量、加料及食用比例。</dd></div><div><dt>資訊足以估算？</dt><dd>足夠時，計算營養與範圍。不足時最多追問兩輪，更新資料後重查。略過或達上限時，回傳有依據的範圍或未估草稿。</dd></div><div><dt>安全規則是否觸發？</dt><dd>觸發時提供一般資訊與諮詢選項。其他情境回傳附來源的可編輯結果。</dd></div></dl><p class="callout">記錄意圖須由使用者確認當前版本後才提交。</p>
+    </section>
+    <section id="slide-8" class="slide " aria-labelledby="title-8">
+      <p class="kicker">DIETSENSE · DIC3</p>
+      <h1 id="title-8">核心演算法</h1>
+      <ol class="steps"><li>接收請求與狀態，分流記錄、查詢、分析或建議。</li><li>套用初步風險規則，必要時回覆一般資訊。</li><li>抽取食材、份量、加料及食用比例，檢索版本化資料。</li><li>關鍵資料不足時追問，至多兩輪。更新證據並重新判斷。</li><li>證據不足時標記未估。可估時換算 kcal、三大營養素及區間。</li><li>視適用條件估 TDEE，套用輸出安全規則。</li><li>附來源與假設回傳。記錄意圖經明確確認後提交，重送去重。</li></ol>
+    </section>
+    <section id="slide-9" class="slide " aria-labelledby="title-9">
+      <p class="kicker">DIETSENSE · DIC3</p>
+      <h1 id="title-9">評估設計與預期成效</h1>
+      <dl class="rows"><div><dt>500 筆臺式餐點</dt><dd>依店家／菜系分組，以分件稱重建立參考值。比較 MyFitnessPal 手動紀錄與兩項消融。</dd></div><div><dt>20 位成人 × 7 天</dt><dd>首日熟悉，後六天隨機 AB／BA 交叉。另設至少 30 個 Agent 情境驗證安全與例外。</dd></div></dl><h2>待驗證目標</h2><dl class="metrics"><div><dt>&gt; 85%</dt><dd>±20% 熱量命中</dd></div><div><dt>60%</dt><dd>配對記錄時間縮短</dd></div><div><dt>&gt; 70</dt><dd>平均 SUS</dd></div></dl>
+    </section>
+    <section id="slide-10" class="slide " aria-labelledby="title-10">
+      <p class="kicker">DIETSENSE · DIC3</p>
+      <h1 id="title-10">OpenSpec 從設計到驗收</h1>
+      <dl class="rows"><div><dt>proposal.md</dt><dd>定義問題與四項能力。</dd></div><div><dt>specs／design.md</dt><dd>把行為寫成 SHALL 和 WHEN／THEN，記錄架構、資料與降級決策。</dd></div><div><dt>tasks.md</dt><dd>實作後以半湯比例、逾時、重送和高風險請求等情境驗收。</dd></div></dl><p class="callout">OpenSpec 1.17.0 · 4/4 規格工件 · strict validate 通過</p>
+    </section>
+    <section id="slide-11" class="slide " aria-labelledby="title-11">
+      <p class="kicker">DIETSENSE · DIC3</p>
+      <h1 id="title-11">預期貢獻與下一階段</h1>
+      <dl class="rows"><div><dt>可重現的臺式樣本</dt><dd>版本化標註與參考值可支援在地飲食工具比較。</dd></div><div><dt>可解釋的估算</dt><dd>以分組評估和消融檢驗在地資料、澄清對誤差與成本的貢獻。</dd></div><div><dt>可驗收的 Agent</dt><dd>先做文字原型與 30 個情境，通過後執行使用者試用並報告結果。</dd></div></dl><p><a href="../#openspec">閱讀完整規格工作流 →</a></p>
+    </section>
+  </main>
+  <nav class="controls" aria-label="簡報控制" hidden>
+    <button type="button" id="previous">← <span>上一頁</span></button>
+    <div class="jump">
+      <label for="slide-select">跳到投影片</label>
+      <select id="slide-select">
+          <option value="1">01 · DietSense</option>
+          <option value="2">02 · 臺式外食紀錄的問題</option>
+          <option value="3">03 · 研究方法與缺口</option>
+          <option value="4">04 · 五個核心思維</option>
+          <option value="5">05 · 三項取捨與設計決策</option>
+          <option value="6">06 · 八模組系統架構</option>
+          <option value="7">07 · 餐點估算與確認流程</option>
+          <option value="8">08 · 核心演算法</option>
+          <option value="9">09 · 評估設計與預期成效</option>
+          <option value="10">10 · OpenSpec 從設計到驗收</option>
+          <option value="11">11 · 預期貢獻與下一階段</option>
+      </select>
+      <span id="position" role="status"></span>
+    </div>
+    <button type="button" id="next"><span>下一頁</span> →</button>
+  </nav>
+</body>
+</html>
