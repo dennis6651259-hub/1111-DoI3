@@ -1,9 +1,9 @@
 # DietSense 臺式飲食熱量分析 Agent
 <img width="718" height="852" alt="{7BE8516A-0D99-431E-BBDA-FF9841A3E13F}" src="https://github.com/user-attachments/assets/b4f79cff-ea52-4bd4-bac4-42c696ebdb04" />
 
-https://dennis6651259-hub.github.io/1111-DoI3/
+報告網站 : https://dennis6651259-hub.github.io/1111-DoI3/
 
-[播放網頁簡報](https://dennis6651259-hub.github.io/1111-DoI3/slides/)
+PPT網站 : https://dennis6651259-hub.github.io/1111-DoI3/slides/
 
 DietSense 是 DIC3 的 OpenSpec 提案重構專案。它針對臺式外食難以記錄份量、加料與剩食的問題，設計一個能用繁體中文理解餐點、查找營養資料並產生可修正紀錄的 AI Agent。
 
