@@ -1,0 +1,17 @@
+> openspec --version
+1.17.0
+> openspec status --change diet-sense-meal-logging
+Change: diet-sense-meal-logging
+Schema: spec-driven
+Change root: openspec\changes\diet-sense-meal-logging
+Progress: 4/4 artifacts complete
+
+[x] proposal
+[x] specs
+[x] design
+[x] tasks
+
+All planning artifacts complete!
+Next: openspec instructions apply --change "diet-sense-meal-logging" --json
+> openspec validate diet-sense-meal-logging --strict
+Change 'diet-sense-meal-logging' is valid
