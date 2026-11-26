@@ -15,7 +15,7 @@
 - [x] 編譯 before 與 after 的最後來源。
 - [x] 檢查最後論文 PDF 排版。
 - [x] 驗證兩份 Overleaf ZIP 的必要檔案。
-- [ ] 將 DIC4 發佈到 GitHub 獨立分支並讀回。
+- [x] 將 DIC4 發佈到 GitHub 獨立分支並讀回。
 
 ## 外部操作待完成
 - [ ] 在 Overleaf 匯入 before 與 after，取得實際專案連結。
@@ -29,4 +29,5 @@
 - [ ] 依機構要求處理研究倫理與成人知情同意。
 - [ ] 完成 20 人七日 feasibility study。
 - [ ] 依真實結果更新論文，再決定正式投稿。
+
 
