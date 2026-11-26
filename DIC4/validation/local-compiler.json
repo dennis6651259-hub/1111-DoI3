@@ -1,0 +1,18 @@
+{
+  "compiler": "Codex desktop built-in LaTeX compiler",
+  "date": "2026-11-26",
+  "timezone": "Asia/Taipei",
+  "results": [
+    {
+      "version": "before",
+      "kind": "success",
+      "source_sha256": "6ebec29bc144dec8cca1b864419ba22fff7f5a439dedea58ef7b0a72c8771548"
+    },
+    {
+      "version": "after",
+      "kind": "success",
+      "source_sha256": "1bdf76a5d54bec6a9a7d65b8e822d30c7d6eae6111ee7c1d55f9c68c72828402"
+    }
+  ],
+  "scope": "Successful local compilation only; not Overleaf or MCP evidence."
+}

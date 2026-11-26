@@ -1,0 +1,7 @@
+Final sources compiled with Tectonic 0.17.0.
+Before: 2 pages; After: 6 pages.
+All pages rendered with PDFium and visually inspected.
+No overfull boxes, undefined references, or missing-character diagnostics in final logs.
+Underfull box warnings occur in long bibliography URLs; rendered lines were inspected.
+Tectonic emits a Fontconfig initialization warning; PDF text and font rendering were verified.
+Local compilation is not Overleaf MCP evidence.

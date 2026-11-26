@@ -1,0 +1,4 @@
+before: core sections present; 6 cited keys resolved; source sha256 6ebec29bc144dec8cca1b864419ba22fff7f5a439dedea58ef7b0a72c8771548
+after: core sections present; 8 cited keys resolved; source sha256 1bdf76a5d54bec6a9a7d65b8e822d30c7d6eae6111ee7c1d55f9c68c72828402
+DIC4_Overleaf_Before.zip: independent main.tex verified; sha256 233d5b814773eebb0b04460351fa77ab0e7182340be938d0c8a0d7cbe801673c
+DIC4_Overleaf_After.zip: independent main.tex verified; sha256 68d32342ffe68ef5238b5bec266d18f20df5010d35809a3ecf2934467b76b01d

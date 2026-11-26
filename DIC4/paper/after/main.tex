@@ -1,0 +1,160 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=24mm]{geometry}
+\usepackage{lmodern,microtype,amsmath,amssymb,booktabs,tabularx,array}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=*}
+\setlength{\parskip}{3pt}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\title{DietSense\\Traceable Meal Logging for Taiwanese Mixed Dishes}
+\author{Ding-Chang Wang\\Course identifier 7115064172}
+\date{DIC4 revised manuscript v1 --- November 26, 2026}
+\begin{document}
+\maketitle
+\textbf{Research status.} This manuscript presents a proposed system and an evaluation protocol. Dataset collection, prototype evaluation, and participant recruitment have not been completed. No performance results are claimed. This is a general academic draft; no publication venue has been selected. Author-name romanization is provisional.
+\begin{abstract}
+Free-text meal descriptions can express additions and leftovers that a whole-dish lookup may omit, but Taiwanese mixed dishes still leave substantial uncertainty about ingredients and consumed portions. We propose DietSense, a Traditional Chinese meal-logging agent that links dish decomposition to versioned food records, bounded clarification, and user-confirmed logging. The language model extracts structured fields and selects tools; validated calculation tools derive energy and macronutrients from retrieved records. Each estimate retains item-level provenance, portion assumptions, and a scenario-based range. Missing evidence produces an explicitly unestimated draft. The proposed evaluation separates the effects of local recipe retrieval and clarification through a two-factor ablation on 500 planned meal descriptions, with restaurant and recipe-family grouping to reduce leakage. A planned 20-adult, seven-day feasibility study examines logging time, completion, and usability against manual logging. Accuracy, abstention, range coverage, and user effort will be reported jointly. This paper contributes a testable workflow and evaluation protocol; the proposed accuracy and time-saving targets remain unverified.
+\end{abstract}
+\noindent\textbf{Keywords:} dietary logging; Taiwanese mixed dishes; retrieval; clarification; provenance
+
+\section{Introduction}
+\subsection{Problem and scope}
+A meal description may communicate more than a food name. ``Beef noodle soup with an extra egg; I drank half the broth'' specifies a modification and a component-specific consumption fraction. Applying one portion multiplier to the entire bowl would incorrectly reduce the noodles, beef, and egg along with the broth. Even after parsing the description, bowl size, recipe variation, and cooking state remain uncertain. We study how a text-based agent can make those unresolved assumptions visible while keeping logging effort manageable.
+
+Nutrition datasets support quantitative estimation, but a database match alone does not establish the consumed amount. Taiwan's food composition dataset exposes names, units, and per-100-gram values~\cite{tfda}; FoodData Central includes several data types with different origins and purposes~\cite{usda}. DietSense therefore treats matching, portion inference, and arithmetic as separate steps. It is scoped to voluntary dietary logging by general adults in Traditional Chinese. Clinical prescriptions, photographs, voice recognition, and weight-loss outcomes are outside this draft's evaluation.
+
+\subsection{Prior approaches and remaining question}
+Nutrition5k provides component-level supervision for visual nutrition estimation~\cite{nutrition5k}. DietAI24 grounds image-based assessment in nutrition databases~\cite{dietai24}, and NutriRAG studies retrieval-supported food identification and classification from free text~\cite{nutrirag}. Open-KNEAD further studies agentic decomposition and auditable food-code grounding~\cite{openknead}. Together, these studies make a broad claim that ``an agent plus retrieval is novel'' untenable. They do not, by themselves, establish whether a Traditional Chinese logging workflow benefits from local recipes and a strictly limited clarification budget on the planned Taiwanese test set.
+
+Our design hypothesis is that local matching and clarification address different error sources. Local recipes may improve ingredient selection; clarification may improve consumed portions. Both can also introduce errors or effort. The study must therefore measure their separate effects, their interaction, and the frequency with which the system cannot provide a supported estimate.
+
+\subsection{Research questions and proposed contributions}
+\textbf{RQ1.} At a fixed model and tool configuration, how does Taiwanese recipe retrieval affect energy error, match correctness, and estimation availability?
+
+\textbf{RQ2.} What additional accuracy and range-coverage changes follow from at most two clarification rounds, and how much time and abandonment do they add?
+
+\textbf{RQ3.} Can the workflow preserve item-level provenance and current-version confirmation under missing data, user corrections, and tool failures?
+
+The proposed contributions are (i) a logging design that couples local food matching with component-specific consumption and bounded clarification; (ii) a protocol separating retrieval and clarification through controlled ablations; and (iii) explicit acceptance scenarios for provenance, abstention, and log integrity. These are design contributions to be implemented and tested. We make no claim of being the first nutrition agent or of outperforming prior systems.
+
+\section{Related Work}
+\subsection{Visual nutrition estimation and component references}
+Nutrition5k couples visual observations with component weights and nutritional annotations~\cite{nutrition5k}. We borrow its component-oriented reference principle when planning weighed Taiwanese meals, rather than assuming a photograph provides the consumed mass. DietAI24 combines multimodal models and retrieval from nutrition databases~\cite{dietai24}. It is a close precedent for grounding estimates in external data, but its image-based setting differs from explicit text corrections about additions and leftovers. Neither publication's reported performance will serve as a directly comparable baseline on our uncollected dataset.
+
+\subsection{Free-text dietary identification}
+NutriRAG applies retrieval-augmented language processing to food identification and classification in free-text dietary records~\cite{nutrirag}. This is closer to DietSense's input modality than visual recognition. We distinguish correctly recognizing a food label from establishing its recipe, consumed mass, and energy estimate. A correct label can still yield an incorrect meal total if additions or partially consumed components are ignored. Our proposed measurements therefore separate component extraction, food-record matching, and final numerical error.
+
+\subsection{Retrieval and tool-using agents}
+RAG demonstrates a framework combining parametric generation and external retrieval~\cite{rag}; ReAct investigates interleaving reasoning with environment-facing actions~\cite{react}. They inform tool orchestration, but do not establish nutritional validity. DietSense will validate structured tool arguments, retain returned source identifiers, and compute values outside unconstrained language generation. Retrieved text will be treated as data rather than as authority to change the workflow.
+
+Open-KNEAD is a particularly close recent preprint: it combines item decomposition, food-code grounding, and auditable estimates, and questions whether retrieval necessarily improves direct estimation with modern models~\cite{openknead}. Its existence narrows our contribution to the Taiwanese text-based workflow and controlled clarification study. Its reported results are evidence from its own image-based settings, not evidence that DietSense will improve accuracy. A future head-to-head comparison would require aligned inputs and a reproducible implementation; that comparison is not claimed here.
+
+\subsection{Positioning and evidence limits}
+Table~\ref{tab:prior} summarizes the role of the closest nutrition studies. The comparison concerns their stated focus and our planned protocol; it is not a ranking. DietSense's proposed ranges are sets of supported recipe and portion scenarios, not calibrated confidence intervals. Our empirical question is whether these ranges and limited questions are useful for Taiwanese meal descriptions.
+\begin{table}[ht]
+\centering\small
+\caption{Prior nutrition work and the question retained for DietSense.}\label{tab:prior}
+\begin{tabularx}{\linewidth}{@{}p{23mm}YY@{}}
+\toprule
+Work & Relevant focus & Question for our protocol\\\midrule
+Nutrition5k & Visual data with component-weight references & How can local weighed components support evaluation?\\
+DietAI24 & Image assessment grounded in nutrition records & How does local matching affect text-only logging?\\
+NutriRAG & Food identification and classification from free text & What changes when portions and leftovers must be resolved?\\
+Open-KNEAD & Agentic decomposition and auditable grounding & What is the effect of an explicit two-round question budget?\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Proposed DietSense Workflow}
+\subsection{Structured extraction and versioned matching}
+The planner will extract a dish, additions, preparation state, quantity expressions, and component-specific consumption fractions into a validated draft. The broth fraction in the motivating example attaches only to broth. Candidate food records must have compatible preparation states and units. Local alias and recipe matches will be considered first; an equivalent USDA ingredient may be used only with a visible substitution assumption. An unmatched component remains missing evidence rather than a zero-energy item.
+
+For each component, the draft will retain the food identifier, dataset version, recipe version where applicable, nutrient basis, edible mass or supported mass range, consumed fraction, and matching assumptions. Model and prompt identifiers, retrieval settings, and snapshot checksums will be frozen before test evaluation. Database pages establish the availability of candidate data~\cite{tfda,usda}; they do not imply that any local snapshot has already been collected or validated.
+
+\subsection{Deterministic calculation and bounded clarification}
+For a supported scenario $s$ with $m$ components, meal energy is
+\begin{equation}
+ E_s=\sum_{i=1}^{m}\frac{w_{is} f_{is} e_{is}}{100},
+\end{equation}
+where $w_{is}$ is served edible mass in grams, $f_{is}\in[0,1]$ is the consumed fraction, and $e_{is}$ is energy per 100 grams in the selected record. If a measured mass already represents the consumed amount, $f_{is}=1$ to prevent double adjustment. Protein, fat, and carbohydrate use the same unit conversion with the corresponding nutrient density.
+
+The tool will enumerate compatible recipe and portion scenarios $S$ and display $[L,U]=[\min_{s\in S}E_s,\max_{s\in S}E_s]$. A separately identified nominal scenario supplies the point estimate. Incompatible combinations are excluded; we do not assume independently chosen minima and maxima are physically compatible. No probabilistic coverage is asserted before evaluation.
+
+A clarification policy will rank unresolved fields by the estimated reduction in scenario width obtainable from an answer. The ranking and stopping threshold will be selected on development data and frozen. At most two rounds are allowed. The user may skip a question. When no supported scenario remains, the draft will be marked unestimated and list the missing evidence. When evidence is sufficient but broad, the tool will show its range and assumptions rather than silently treating it as a precise measurement.
+
+\subsection{Correction and confirmation}
+A user edit creates a new draft revision and invalidates the previous confirmation token. Submission will require the owner, current revision, and an idempotency key; a transaction and uniqueness constraint will prevent duplicate log entries. A stale confirmation will fail visibly. Persisted records will contain structured meal information and provenance, while raw conversation retention will be disabled by default. Safety-related cases will be handled by conservative, separately tested response rules; this draft evaluates routing behavior, not clinical safety or treatment benefit.
+
+\section{Planned Evaluation}
+\subsection{Dataset and reference construction}
+We plan 500 Traditional Chinese meal descriptions covering noodle soups, rice meals, lunch boxes, and snacks, including modifications and partial consumption. Each underlying meal will have a recipe identifier, restaurant identifier when relevant, component weights, preparation state, and consumed fractions. References will be computed from those measurements and fixed-version food composition records, with a second annotator reviewing matches and disagreements. This is a weighed, database-derived reference, not laboratory calorimetry or error-free ground truth.
+
+Before analysis, restaurant and recipe-family links will form connected groups so related meals cannot cross splits. The nominal allocation is approximately 300 development and 200 held-out test descriptions; preserving group separation takes priority over exact counts. If adequate grouping is impossible, collection will be revised before the test set is opened. Paraphrases and portion variants of one meal stay in its group. Clarification responses will come from annotated case records, with every system receiving the same initial description. Test answers will not enter retrieval or threshold tuning.
+
+\subsection{Comparisons and control conditions}
+The computational study uses a two-factor design: local Taiwanese recipe retrieval on or off, crossed with clarification on or off. All four conditions retain the same model, structured schema, calculation rules, source logging, and global ingredient snapshot. Turning local retrieval off removes only the Taiwanese recipe and alias layer; turning clarification off prohibits additional questions. This controls the two design factors without conflating them with confirmation or arithmetic changes.
+
+We will also evaluate direct LLM estimation from the same initial text as a descriptive baseline. Its lack of retrieved provenance will be recorded rather than assigned fabricated citations. Repeated runs under fixed settings will characterize model variability. Nutrition5k, DietAI24, NutriRAG, and Open-KNEAD are related work, not performance baselines unless their implementations and input conditions are explicitly aligned in later work.
+
+\subsection{Metrics and uncertainty}
+For $N$ evaluable test cases with reference energies $y_j>0$, define
+\begin{equation}
+ H_{20}^{\mathrm{all}}=\frac{1}{N}\sum_{j=1}^{N}
+ \mathbb{I}\{a_j=1\ \land\ |\hat y_j-y_j|/y_j\leq0.20\},
+\end{equation}
+where $a_j=1$ indicates a returned estimate. Abstentions count as misses for this primary measure. Estimation availability is $\sum_j a_j/N$. MAE and conditional hit rate will also be reported among estimated cases, with explicit denominators. A zero or invalid reference will be investigated under a declared exclusion rule and reported separately, never silently removed.
+
+For estimated cases, range coverage is the fraction with $L_j\leq y_j\leq U_j$; mean width and width relative to $y_j$ will accompany it. We will additionally report the fraction of all cases that are both estimated and covered, preventing high abstention from inflating apparent coverage. Extraction errors, food-match errors, provenance completeness, and failures by dish family will be analyzed separately. Paired differences will use bootstrap confidence intervals resampled at the held-out group level; stochastic repeats will remain nested within each case.
+
+\subsection{Human feasibility study and acceptance targets}
+Subject to institutional requirements and informed consent, 20 adults will be invited to a seven-day feasibility study. On day 1, participants receive training; days 2--4 and 5--7 form two counterbalanced periods comparing DietSense with manual MyFitnessPal logging. Ten participants will start with each condition. A standardized meal task under both methods will supply paired time measurements; free-living logs will supply completion and correction observations. The System Usability Scale (SUS) will be administered after each period for the corresponding condition. Order, learning, and carryover will be examined descriptively. This pilot is not powered to establish health benefits or population-wide superiority.
+
+The DIC3 objectives are retained as prospective targets: $H_{20}^{\mathrm{all}}>0.85$, at least 60\% median participant-level relative time reduction, and mean SUS score above 70. Time reduction will be computed from participant-level $1-T_{\mathrm{DietSense}}/T_{\mathrm{manual}}$ ratios. We will report completion failures and accuracy alongside time to avoid rewarding skipped work. These targets are aspirational engineering criteria, not achieved results or statistically justified effect-size assumptions.
+
+At least 30 scripted agent scenarios are planned across component fractions, missing matches, source timeouts, maximum question rounds, revisions, repeated submissions, ownership checks, and conservative routing. Each case will record the input, expected state, actual state, and source/configuration versions. A formatted OpenSpec file or a successful LaTeX build will not be counted as passing these behavioral tests.
+
+\section{Limitations and Current Status}
+Portion descriptions may be inaccurate even after clarification. Database-derived references share food-table assumptions with the estimator, which can favor database agreement without proving biological intake accuracy. Restaurant recipes may differ from stored templates, and the planned dataset may underrepresent regional or home-cooking variation. Scenario bounds can miss the real meal and require empirical coverage checks. The limited question budget may improve speed at the cost of availability.
+
+This DIC4 deliverable supplies revised writing, LaTeX sources, source verification, and specification artifacts. A functioning nutrition agent, a collected 500-case dataset, participant data, and achieved target values are not supplied as research results. Future reporting must replace prospective statements only when supported by recorded experiments. Venue formatting, institutional review where applicable, and author affiliation remain to be resolved before an actual submission.
+
+\section{Conclusion}
+DietSense proposes a traceable logging workflow for Taiwanese mixed dishes, with local matching, component-specific consumption, and no more than two clarification rounds. The evaluation protocol separates retrieval from clarification and reports abstention, range behavior, and effort alongside energy error. Its value remains an empirical question to be tested with fixed data and transparent failure reporting.
+\begingroup\small\setlength{\parskip}{0pt}\begin{thebibliography}{9}\setlength{\itemsep}{2pt}
+\bibitem{nutrition5k} Q. Thames, A. Karpur, W. Norris, F. Xia, L. Panait, T. Weyand, and J. Sim.
+Nutrition5k: Towards Automatic Nutritional Understanding of Generic Food.
+In \emph{CVPR}, pp. 8903--8911, 2021.
+\url{https://openaccess.thecvf.com/content/CVPR2021/papers/Thames_Nutrition5k_Towards_Automatic_Nutritional_Understanding_of_Generic_Food_CVPR_2021_paper.pdf}.
+\bibitem{dietai24} R. Yan et al.
+DietAI24 as a framework for comprehensive nutrition estimation using multimodal large language models.
+\emph{Communications Medicine}, 5, 458, 2025.
+\url{https://doi.org/10.1038/s43856-025-01159-0}.
+\bibitem{nutrirag} H. Zhou et al.
+NutriRAG: unleashing the power of large language models for food identification and classification through retrieval methods.
+\emph{Journal of the American Medical Informatics Association}, 33(4):802--811, 2026.
+\url{https://doi.org/10.1093/jamia/ocag003}.
+\bibitem{openknead} B. Coburn, J. Yue, J. Ma, S. Raghavan, G. Vinod, and F. Zhu.
+Open-KNEAD: Knowledge-grounded Nutrition Estimation via Agentic Decomposition.
+\emph{arXiv preprint arXiv:2607.12911}, 2026.
+\url{https://arxiv.org/abs/2607.12911}.
+\bibitem{rag} P. Lewis et al.
+Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks.
+In \emph{NeurIPS}, 33:9459--9474, 2020.
+\url{https://papers.nips.cc/paper/2020/hash/6b493230205f780e1bc26945df7481e5-Abstract.html}.
+\bibitem{react} S. Yao, J. Zhao, D. Yu, N. Du, I. Shafran, K. Narasimhan, and Y. Cao.
+ReAct: Synergizing Reasoning and Acting in Language Models.
+In \emph{ICLR}, 2023.
+\url{https://openreview.net/forum?id=WE_vluYUL-X}.
+\bibitem{tfda} Taiwan Food and Drug Administration.
+Food Nutrition Composition Dataset. Dataset 8543.
+\url{https://data.gov.tw/dataset/8543}. Accessed November 26, 2026.
+\bibitem{usda} USDA Agricultural Research Service.
+FoodData Central Data Type Documentation.
+\url{https://fdc.nal.usda.gov/data-documentation/}. Accessed November 26, 2026.
+\end{thebibliography}\endgroup
+\end{document}
+

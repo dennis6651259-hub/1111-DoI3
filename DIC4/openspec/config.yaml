@@ -1,0 +1,6 @@
+schema: spec-driven
+context: |
+  DIC4 transforms the DIC3 DietSense proposal into an English academic manuscript.
+  Core sections are Abstract, Introduction, and Related Work.
+  This is a design and protocol paper without experimental results.
+  Preserve honest before and after provenance and report external integration gaps.

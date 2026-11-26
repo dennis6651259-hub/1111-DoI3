@@ -1,0 +1,68 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=24mm]{geometry}
+\usepackage{lmodern,microtype,amsmath,amssymb,booktabs,tabularx,array}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=*}
+\setlength{\parskip}{3pt}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\title{DietSense\\Traceable Meal Logging for Taiwanese Mixed Dishes}
+\author{Ding-Chang Wang\\Course identifier 7115064172}
+\date{DIC4 initial draft v0 --- November 26, 2026}
+\begin{document}
+\maketitle
+\textbf{Draft provenance.} This is a new English baseline adapted from the DIC3 proposal, not a previously submitted paper or a historical Overleaf revision. It preserves the proposal's broad framing and planned targets. No experiments are reported. The author-name romanization is provisional; the course identifier is retained from the DIC3 repository.
+\begin{abstract}
+Recording Taiwanese meals is difficult because mixed dishes contain several ingredients, additions, and uncertain portions. DietSense is proposed as a Traditional Chinese dietary logging agent that understands meal descriptions, retrieves nutrition information, asks clarification questions, and generates editable meal records. A language model extracts meal information, while calculation tools use Taiwanese food composition data and USDA data to estimate energy and macronutrients. Sources, assumptions, and ranges accompany the estimates. A planned evaluation uses 500 meal descriptions and a seven-day study with 20 adults. The intended targets are an energy estimate within 20\% of the reference for more than 85\% of meals, a 60\% reduction in logging time, and a mean System Usability Scale score above 70. These values are objectives awaiting evaluation.
+\end{abstract}
+\section{Introduction}
+Taiwanese eating-out scenarios include lunch boxes, noodle soups, and night-market dishes. Users may remember a dish name but not its ingredients or weight. A statement such as ``beef noodle soup with an extra egg; I drank half the broth'' contains both additions and partial consumption. A single whole-dish entry can miss these details, whereas entering every ingredient requires effort.
+
+DietSense aims to support meal logging in Traditional Chinese. The agent extracts dish names, portions, and consumption ratios, retrieves local recipes and nutrition records, and calculates energy and macronutrients. It asks at most two rounds of questions and keeps a meal as an unestimated draft when evidence is insufficient. Users may correct a draft and must confirm its current version before it enters the formal log.
+
+The proposed system combines a language model, retrieval, nutrition calculations, safety rules, and storage. Taiwanese food composition records are preferred, and USDA records supplement equivalent ingredients~\cite{tfda,usda}. The intended contributions are a local meal dataset, a conversational logging workflow, and scenario-based specifications. Evaluation will compare manual logging and ablated versions of DietSense.
+\section{Related Work}
+Nutrition5k provides food images, component weights, and nutritional annotations for studying visual estimation~\cite{nutrition5k}. It suggests a useful reference-building procedure, although Taiwanese recipes require local data. DietAI24 combines multimodal language models with retrieval from nutrition databases~\cite{dietai24}. Image-based approaches motivate automated assessment, while a text interface can explicitly receive additions and leftovers.
+
+Retrieval-augmented generation combines a language model with external knowledge~\cite{rag}. ReAct integrates reasoning and actions to interact with tools~\cite{react}. These ideas motivate the retrieval and calculation components of DietSense. The proposal uses separate calculation tools so that numerical nutrition values can be linked to data records.
+
+The planned workflow will prioritize local food names, clarify portions, and record source versions. A 500-item dataset and a 20-adult trial are planned to examine estimation accuracy and logging effort. The prototype and user study remain future work.
+\section{Planned Next Steps}
+The next stage will refine the research questions, compare closer nutrition-specific systems, define the reference protocol and metrics, and turn the proposal into a reproducible evaluation design.
+\begingroup\small\setlength{\parskip}{0pt}\begin{thebibliography}{9}\setlength{\itemsep}{2pt}
+\bibitem{nutrition5k} Q. Thames, A. Karpur, W. Norris, F. Xia, L. Panait, T. Weyand, and J. Sim.
+Nutrition5k: Towards Automatic Nutritional Understanding of Generic Food.
+In \emph{CVPR}, pp. 8903--8911, 2021.
+\url{https://openaccess.thecvf.com/content/CVPR2021/papers/Thames_Nutrition5k_Towards_Automatic_Nutritional_Understanding_of_Generic_Food_CVPR_2021_paper.pdf}.
+\bibitem{dietai24} R. Yan et al.
+DietAI24 as a framework for comprehensive nutrition estimation using multimodal large language models.
+\emph{Communications Medicine}, 5, 458, 2025.
+\url{https://doi.org/10.1038/s43856-025-01159-0}.
+\bibitem{nutrirag} H. Zhou et al.
+NutriRAG: unleashing the power of large language models for food identification and classification through retrieval methods.
+\emph{Journal of the American Medical Informatics Association}, 33(4):802--811, 2026.
+\url{https://doi.org/10.1093/jamia/ocag003}.
+\bibitem{openknead} B. Coburn, J. Yue, J. Ma, S. Raghavan, G. Vinod, and F. Zhu.
+Open-KNEAD: Knowledge-grounded Nutrition Estimation via Agentic Decomposition.
+\emph{arXiv preprint arXiv:2607.12911}, 2026.
+\url{https://arxiv.org/abs/2607.12911}.
+\bibitem{rag} P. Lewis et al.
+Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks.
+In \emph{NeurIPS}, 33:9459--9474, 2020.
+\url{https://papers.nips.cc/paper/2020/hash/6b493230205f780e1bc26945df7481e5-Abstract.html}.
+\bibitem{react} S. Yao, J. Zhao, D. Yu, N. Du, I. Shafran, K. Narasimhan, and Y. Cao.
+ReAct: Synergizing Reasoning and Acting in Language Models.
+In \emph{ICLR}, 2023.
+\url{https://openreview.net/forum?id=WE_vluYUL-X}.
+\bibitem{tfda} Taiwan Food and Drug Administration.
+Food Nutrition Composition Dataset. Dataset 8543.
+\url{https://data.gov.tw/dataset/8543}. Accessed November 26, 2026.
+\bibitem{usda} USDA Agricultural Research Service.
+FoodData Central Data Type Documentation.
+\url{https://fdc.nal.usda.gov/data-documentation/}. Accessed November 26, 2026.
+\end{thebibliography}\endgroup
+\end{document}

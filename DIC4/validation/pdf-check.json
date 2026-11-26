@@ -1,0 +1,25 @@
+{
+  "compiler": "Tectonic 0.17.0",
+  "render_engine": "PDFium",
+  "date": "2026-11-26",
+  "results": [
+    {
+      "version": "before",
+      "pages": 2,
+      "source_sha256": "6ebec29bc144dec8cca1b864419ba22fff7f5a439dedea58ef7b0a72c8771548",
+      "pdf_sha256": "ea2ceb0d54a6dbd8f837911c7516c374af77e9dc3810edd86ca750348f3c24a9",
+      "text_extracted": true,
+      "overfull_or_missing_glyph_diagnostics": [],
+      "visual_review": "All pages inspected; clean tables, equations, citations and page boundaries."
+    },
+    {
+      "version": "after",
+      "pages": 6,
+      "source_sha256": "1bdf76a5d54bec6a9a7d65b8e822d30c7d6eae6111ee7c1d55f9c68c72828402",
+      "pdf_sha256": "cfee76b61315f53b7254e8a9eaa8481163b6d11d2a78812c6fe61e0cb674e222",
+      "text_extracted": true,
+      "overfull_or_missing_glyph_diagnostics": [],
+      "visual_review": "All pages inspected; clean tables, equations, citations and page boundaries."
+    }
+  ]
+}

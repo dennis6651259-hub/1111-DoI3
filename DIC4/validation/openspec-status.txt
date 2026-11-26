@@ -1,0 +1,13 @@
+- Loading change status...
+Change: dic4-paper-draft
+Schema: spec-driven
+Change root: C:\Users\User\Documents\Codex\2026-11-26\https-github-com-dennis6651259-hub-1111\outputs\DIC4\openspec\changes\dic4-paper-draft
+Progress: 4/4 artifacts complete
+
+[x] proposal
+[x] specs
+[x] design
+[x] tasks
+
+All planning artifacts complete!
+Next: openspec instructions apply --change "dic4-paper-draft" --json
